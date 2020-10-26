@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/26 13:33:49 by rpet          ########   odam.nl         */
+/*   Updated: 2020/10/26 14:38:09 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,27 @@ typedef enum	e_status {
 	DEAD
 }				t_status;
 
-typedef struct	e_philo {
-	t_status	status;
-	int			left_fork;
-	int			right_fork;
-	int64_t		eat_amount;
-}				t_philo;
-
-typedef struct	e_data {
-	int64_t		philo_amount;
-	int64_t		time_to_die;
-	int64_t		time_to_eat;
-	int64_t		time_to_sleep;
-	int64_t		eat_amount;
-	t_philo		**philo;
+typedef struct	s_data {
+	int		philo_amount;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		eat_amount;
 }				t_data;
 
+typedef struct	s_philo {
+	int			philo_num;
+	int			left_fork;
+	int			right_fork;
+	int			eat_amount;
+	t_data		*data;
+}				t_philo;
+
 size_t		philo_strlen(char *str);
-int			philo_error(char *error);
-int64_t		philo_atoi(char *str);
-int			init_data(t_data *data, int argc, char **argv);
-int			validate_input(t_data *data, char **argv);
+void		philo_error(char *error);
+int			philo_atoi(char *str);
+void		init_philosophers(t_data *data, t_philo **philosophers);
+void		init_data(t_data *data, int argc, char **argv);
+void		validate_input(t_data *data, char **argv);
 
 #endif

@@ -6,13 +6,14 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/26 13:06:33 by rpet          ########   odam.nl         */
+/*   Updated: 2020/10/26 14:37:38 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 size_t	philo_strlen(char *str)
 {
@@ -24,19 +25,19 @@ size_t	philo_strlen(char *str)
 	return (len);
 }
 
-int		philo_error(char *error)
+void	philo_error(char *error)
 {
 	int		len;
 
 	len = philo_strlen(error);
 	write(2, error, len);
-	return (0);
+	exit(1);
 }
 
-int64_t	philo_atoi(char *str)
+int		philo_atoi(char *str)
 {
 	int			i;
-	uint64_t	ret;
+	long		ret;
 
 	i = 0;
 	ret = 0;
