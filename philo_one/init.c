@@ -6,12 +6,16 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/26 17:01:47 by rpet          ########   odam.nl         */
+/*   Updated: 2020/10/26 19:51:34 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdlib.h>
+
+/*
+**		Mallocs a struct for every philosopher
+*/
 
 void	init_philosophers(t_data *data, t_philo **philosophers)
 {
@@ -32,6 +36,10 @@ void	init_philosophers(t_data *data, t_philo **philosophers)
 	}
 }
 
+/*
+**		Checks if the input is valid
+*/
+
 void	validate_input(t_data *data, char **argv)
 {
 	if (data->philo_amount <= 0)
@@ -45,6 +53,10 @@ void	validate_input(t_data *data, char **argv)
 	if (data->eat_amount <= 0 && argv[5])
 		philo_error("Invalid input for amount to eat\n");
 }
+
+/*
+**		Saves all the input in a data struct
+*/
 
 void	init_data(t_data *data, int argc, char **argv)
 {
