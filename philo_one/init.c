@@ -12,6 +12,18 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
+#include <pthread.h>
+
+/*
+**
+*/
+
+void	init_mutexes(t_data *data)
+{
+	if (pthread_mutex_init(&data->mutex, NULL) != 0)
+		philo_error("Something went wrong while initialising the mutex\n");
+}
+
 
 /*
 **		Mallocs a struct for every philosopher

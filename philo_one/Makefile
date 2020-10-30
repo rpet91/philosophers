@@ -22,12 +22,12 @@ INC = philosophers.h
 
 all: $(NAME)
 
-$(OBJSDIR)%.o: %.c
+$(OBJSDIR)%.o: %.c $(INC)
 	@mkdir -p objs
-	$(CC) $(FLAGS) -I$(INC) -c $< -o $@
+	$(CC) $(FLAGS) -I. -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) -o $(NAME) $(OBJS)
+	$(CC) $(OBJS) -pthread -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
