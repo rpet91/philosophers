@@ -6,7 +6,7 @@
 #    By: rpet <marvin@codam.nl>                       +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/10/23 12:58:28 by rpet          #+#    #+#                  #
-#    Updated: 2020/10/26 17:04:33 by rpet          ########   odam.nl          #
+#    Updated: 2020/10/31 10:45:01 by rpet          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo_one
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
 OBJSDIR = objs/
-_OBJS = main.o init.o utils.o
+_OBJS = main.o init.o utils.o philo_actions.o
 OBJS = $(addprefix $(OBJSDIR),$(_OBJS))
 INC = philosophers.h
 

@@ -6,18 +6,36 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/26 14:37:38 by rpet          ########   odam.nl         */
+/*   Updated: 2020/10/31 13:33:02 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
-#include <stdint.h>
 #include <stdlib.h>
+#include <sys/time.h>
+
+long	get_time(void)
+{
+	struct timeval		tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	philo_putnb(long nb)
+{
+	char	c;
+
+	if (nb > 9)
+		philo_putnb(nb / 10);
+	c = (char)(nb % 10 + '0');
+	write(STDOUT_FILENO, &c, 1);
+}
 
 size_t	philo_strlen(char *str)
 {
-	int		len;
+	size_t	len;
 
 	len = 0;
 	while (str[len])
@@ -25,13 +43,14 @@ size_t	philo_strlen(char *str)
 	return (len);
 }
 
-void	philo_error(char *error)
+int		philo_error(char *error)
 {
-	int		len;
+	size_t	len;
 
 	len = philo_strlen(error);
-	write(2, error, len);
-	exit(1);
+	write(STDERR_FILENO, error, len);
+	write(1, "\n", 1);
+	return (-1);
 }
 
 int		philo_atoi(char *str)

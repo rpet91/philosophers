@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/23 12:31:46 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/29 13:46:03 by rpet             ###   ########.fr       */
+/*   Updated: 2020/10/31 14:37:44 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,21 @@
 #include <time.h>
 
 /*
-**	Function which get called for every created pthread. The life of every philosopher
+**	Function where every philosopher does their actions
 */
 
 void	*philo_loop(void *arg)
 {
 	t_philo		*philo;
-	int		i = 0;
+	t_data		*data;
 
-	philo = arg;
-	(void) philo;
-//	printf("Philo num: [%i]\n", philo->philo_num);
-	while (1)//philo->philo_num)
+	philo = (t_philo *)arg;
+	data = philo->data;
+	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
-		if (i >= 100000)
-			return (NULL);
-		//pthread_mutex_lock(&philo->data->mutex);
-		i++;
-		//pthread_mutex_unlock(&philo->data->mutex);
-		printf("i: [%i]\n", i);
+		philo_think(philo);
+		philo_eat(philo);
+		philo_sleep(philo);
 	}
 	return (NULL);
 }
@@ -74,9 +70,12 @@ int		main(int argc, char **argv)
 	t_data		data;
 	t_philo		*philo;
 
-	init_data(&data, argc, argv);
-	init_philosophers(&data, &philo);
-	init_mutexes(&data);
+	if (init_data(&data, argc, argv) == -1)
+		return (1);
+	if (init_philosophers(&data, &philo) == -1)
+		return (1);
+	if (init_mutexes(&data) == -1)
+		return (1);
 	create_thread(&philo);
 	return (0);
 }
