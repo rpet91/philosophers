@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/10/23 12:31:46 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/31 14:37:44 by rpet          ########   odam.nl         */
+/*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
+/*   Updated: 2020/11/01 10:59:07 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <unistd.h>
 #include <pthread.h>
 #include <sys/types.h>
 #include <sched.h>
@@ -29,10 +30,14 @@ void	*philo_loop(void *arg)
 	data = philo->data;
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
-		philo_think(philo);
+		philo_status_check(philo, "is thinking");
 		philo_eat(philo);
 		philo_sleep(philo);
 	}
+	if (philo->eat_count == data->max_eat_amount)
+		write_status(philo, "is finished eating");
+	if (data->status == DEAD)
+		write_status(philo, "died");
 	return (NULL);
 }
 

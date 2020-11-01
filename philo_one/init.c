@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/31 14:04:55 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/01 09:36:31 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,45 @@
 #include <pthread.h>
 
 /*
-**		Initialises the mutexes
+**	Initialises the mutex locks for writing status and forks
 */
 
 int		init_mutexes(t_data *data)
 {
-	if (pthread_mutex_init(&data->write, NULL) != 0)
-		return (philo_error("Something went wrong while write mutex init"));
+	int		i;
+
+	if (pthread_mutex_init(&data->write_lock, NULL) != 0)
+		return (philo_error("An error occurred during the write lock init"));
+	i = 0;
+	while (i < data->philo_amount)
+	{
+		if (pthread_mutex_init(&data->fork_lock[i], NULL) != 0)
+			return (philo_error("An error occurred during the fork lock init"));
+		i++;
+	}
 	return (0);
 }
 
 /*
-**		Mallocs a struct for every philosopher
+**	Creates a struct for every philosopher
 */
 
 int		init_philosophers(t_data *data, t_philo **philo)
 {
 	int		i;
 
-	i = 0;
+	data->fork_lock = malloc(sizeof(pthread_mutex_t) * data->philo_amount);	
 	*philo = malloc(sizeof(t_philo) * data->philo_amount);
-	if (!*philo)
+	if (!*philo || !data->fork_lock)
 		return (philo_error("Something went wrong while allocating memory"));
+	i = 0;
 	while (i < data->philo_amount)
 	{
 		(*philo)[i].philo_num = i;
 		(*philo)[i].left_fork = i;
 		(*philo)[i].right_fork = (i + 1) % data->philo_amount;
 		(*philo)[i].eat_count = 0;
+		(*philo)[i].last_time_eaten = get_time();
 		(*philo)[i].data = data;
 		i++;
 	}
@@ -50,7 +61,7 @@ int		init_philosophers(t_data *data, t_philo **philo)
 }
 
 /*
-**		Checks if the input is valid
+**	Checks if the given input is valid
 */
 
 int		validate_input(t_data *data)
@@ -69,7 +80,7 @@ int		validate_input(t_data *data)
 }
 
 /*
-**		Saves all the input in a data struct
+**	Saves all the input in a data struct
 */
 
 int		init_data(t_data *data, int argc, char **argv)
@@ -86,7 +97,10 @@ int		init_data(t_data *data, int argc, char **argv)
 		data->eat_requirement = true;
 	}
 	else
+	{
+		data->max_eat_amount = 1;
 		data->eat_requirement = false;
+	}
 	data->start_time = get_time();
 	data->status = ALIVE;
 	return (validate_input(data));

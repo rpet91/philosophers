@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/31 14:44:47 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/01 11:01:27 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,30 @@ void	write_status(t_philo *philo, char *status)
 	t_data	*data;
 
 	data = philo->data;
-	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
-		return ;
-	pthread_mutex_lock(&data->write);
+	pthread_mutex_lock(&data->write_lock);
 	philo_putnb(get_time() - data->start_time);
 	write(STDOUT_FILENO, " | philo ", 9);
 	philo_putnb(philo->philo_num);
 	write(STDOUT_FILENO, " ", 1);
 	write(STDOUT_FILENO, status, philo_strlen(status));
 	write(STDOUT_FILENO, "\n", 1);
-	pthread_mutex_unlock(&data->write);
+	pthread_mutex_unlock(&data->write_lock);
 }
 
 /*
-**	Function where the philosopher thinks and looks for available forks
+**	Function what checks if the philosopher is alive or done eating
 */
 
-void	philo_think(t_philo *philo)
+void	philo_status_check(t_philo *philo, char *status)
 {
-	write_status(philo, "is thinking");
+	t_data	*data;
+
+	data = philo->data;
+	if (get_time() - philo->last_time_eaten > data->time_to_die)
+		data->status = DEAD;
+	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
+		return ;
+	write_status(philo, status);
 }
 
 /*
@@ -49,10 +54,20 @@ void	philo_think(t_philo *philo)
 
 void	philo_eat(t_philo *philo)
 {
-	if (philo->data->eat_requirement == true)
+	t_data	*data;
+
+	data = philo->data;
+	pthread_mutex_lock(&data->fork_lock[philo->left_fork]);
+	philo_status_check(philo, "has taken their left fork");
+	pthread_mutex_lock(&data->fork_lock[philo->right_fork]);
+	philo_status_check(philo, "has taken their right fork");
+	philo_status_check(philo, "is eating");
+	philo->last_time_eaten = get_time();
+	if (data->eat_requirement == true)
 		philo->eat_count++;
-	write_status(philo, "is eating");
-	operation_time(philo->data->time_to_eat);
+	operation_time(data->time_to_eat);
+	pthread_mutex_unlock(&data->fork_lock[philo->right_fork]);
+	pthread_mutex_unlock(&data->fork_lock[philo->left_fork]);
 }
 
 /*
@@ -61,7 +76,7 @@ void	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
-	write_status(philo, "is sleeping");
+	philo_status_check(philo, "is sleeping");
 	operation_time(philo->data->time_to_sleep);
 }
 
