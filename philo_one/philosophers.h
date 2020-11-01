@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/01 11:27:26 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/01 14:10:51 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,20 @@ typedef struct			s_data {
 	long				start_time;
 	bool				eat_requirement;
 	t_status			status;
+	pthread_t			monitor;
+	pthread_mutex_t		death_lock;
 	pthread_mutex_t		write_lock;
 	pthread_mutex_t		*fork_lock;
 }						t_data;
 
 typedef struct			s_philo {
 	int					philo_num;
-	int					left_fork;
-	int					right_fork;
 	int					eat_count;
 	long				last_time_eaten;
-	t_data				*data;
+	pthread_mutex_t		*fork_one;
+	pthread_mutex_t		*fork_two;
 	pthread_t			philo_thread;
+	t_data				*data;
 }						t_philo;
 
 /*
@@ -61,10 +63,9 @@ void					operation_time(int operation_time);
 **		Initialization functions
 */
 
-int						init_mutexes(t_data *data);
 int						init_philosophers(t_data *data, t_philo **philo);
+int						init_mutexes(t_data *data);
 int						init_data(t_data *data, int argc, char **argv);
-int						validate_input(t_data *data);
 
 /*
 **		Util functions

@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/01 10:59:07 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/01 14:33:39 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,20 @@
 #include <sched.h>
 #include <time.h>
 
+/*static void		*monitor(void *arg)
+{
+	t_data		*data;
+
+	data = (t_data *)arg;
+	printf("kaas\n");
+	return (NULL);
+}*/
+
 /*
 **	Function where every philosopher does their actions
 */
 
-void	*philo_loop(void *arg)
+static void		*philo_loop(void *arg)
 {
 	t_philo		*philo;
 	t_data		*data;
@@ -35,9 +44,7 @@ void	*philo_loop(void *arg)
 		philo_sleep(philo);
 	}
 	if (philo->eat_count == data->max_eat_amount)
-		write_status(philo, "is finished eating");
-	if (data->status == DEAD)
-		write_status(philo, "died");
+		write_status(philo, "has finished eating");
 	return (NULL);
 }
 
@@ -45,42 +52,50 @@ void	*philo_loop(void *arg)
 **	Function which creates threads for the amount of philosophers
 */
 
-void	create_thread(t_philo **philo)
+static int		create_threads(t_philo **philo)
 {
 	int		i;
-	t_philo	*cur_philo;
+	t_philo	*cur;
 
 	i = 0;
 	while (i < (*philo)->data->philo_amount)
 	{
-		cur_philo = *philo + i;
-		pthread_create(&cur_philo->philo_thread, NULL, philo_loop, cur_philo);
+		cur = *philo + i;
+		if (pthread_create(&cur->philo_thread, NULL, philo_loop, cur) != 0)
+			return (philo_error("An error occurred during creating threads"));
 		i++;
 	}
+//	if (pthread_create(&(*philo)->data->monitor, NULL, monitor, (*philo)->data) != 0)
+//		return (philo_error("An error occurred during creating monitor"));
 	i = 0;
 	while (i < (*philo)->data->philo_amount)
 	{
-		cur_philo = *philo + i;
-		pthread_join(cur_philo->philo_thread, NULL);
+		cur = *philo + i;
+		pthread_join(cur->philo_thread, NULL);
 		i++;
 	}
+//	pthread_join((*philo)->data->monitor, NULL);
+	if ((*philo)->data->status == DEAD)
+		write_status(*philo, "died");
+	return (0);
 }
 
 /*
 **	Main function for the philosophers
 */
 
-int		main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_data		data;
 	t_philo		*philo;
 
 	if (init_data(&data, argc, argv) == -1)
 		return (1);
-	if (init_philosophers(&data, &philo) == -1)
-		return (1);
 	if (init_mutexes(&data) == -1)
 		return (1);
-	create_thread(&philo);
+	if (init_philosophers(&data, &philo) == -1)
+		return (1);
+	if (create_threads(&philo) == -1)
+		return (1);
 	return (0);
 }

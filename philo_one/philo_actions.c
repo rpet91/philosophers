@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/01 11:01:27 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/01 14:16:24 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	write_status(t_philo *philo, char *status)
 	data = philo->data;
 	pthread_mutex_lock(&data->write_lock);
 	philo_putnb(get_time() - data->start_time);
-	write(STDOUT_FILENO, " | philo ", 9);
+	write(STDOUT_FILENO, "\t", 1);
 	philo_putnb(philo->philo_num);
 	write(STDOUT_FILENO, " ", 1);
 	write(STDOUT_FILENO, status, philo_strlen(status));
@@ -57,17 +57,17 @@ void	philo_eat(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	pthread_mutex_lock(&data->fork_lock[philo->left_fork]);
-	philo_status_check(philo, "has taken their left fork");
-	pthread_mutex_lock(&data->fork_lock[philo->right_fork]);
-	philo_status_check(philo, "has taken their right fork");
+	pthread_mutex_lock(data->fork_lock);
+	philo_status_check(philo, "has taken a fork");
+	pthread_mutex_lock(data->fork_lock);
+	philo_status_check(philo, "has taken a fork");
 	philo_status_check(philo, "is eating");
 	philo->last_time_eaten = get_time();
 	if (data->eat_requirement == true)
 		philo->eat_count++;
 	operation_time(data->time_to_eat);
-	pthread_mutex_unlock(&data->fork_lock[philo->right_fork]);
-	pthread_mutex_unlock(&data->fork_lock[philo->left_fork]);
+	pthread_mutex_unlock(data->fork_lock);
+	pthread_mutex_unlock(data->fork_lock);
 }
 
 /*
@@ -76,8 +76,13 @@ void	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
+	t_data	*data;
+	
+	data = philo->data;
+	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
+		return ;
 	philo_status_check(philo, "is sleeping");
-	operation_time(philo->data->time_to_sleep);
+	operation_time(data->time_to_sleep);
 }
 
 /*
