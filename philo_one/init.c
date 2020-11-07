@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/01 14:11:27 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/07 11:45:45 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int				init_mutexes(t_data *data)
 	i = 0;
 	while (i < data->philo_amount)
 	{
-		if (pthread_mutex_init(&data->fork_lock[i], NULL) != 0)
+		if (pthread_mutex_init(data->fork_lock + i, NULL) != 0)
 			return (philo_error("An error occurred during the fork lock init"));
 		i++;
 	}
