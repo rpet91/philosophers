@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:08:02 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:30:23 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	write_status(t_philo *philo, char *status)
 }
 
 /*
-**	Function what checks if the philosopher is alive or done eating
+**	Function which checks if the philosopher is alive or done eating
 */
 
 void	philo_status_check(t_philo *philo, char *status)
@@ -41,7 +41,7 @@ void	philo_status_check(t_philo *philo, char *status)
 	t_data	*data;
 
 	data = philo->data;
-	if (get_time() - philo->last_time_eaten > data->time_to_die)
+	if (get_time() - philo->eat_time > (unsigned)data->time_to_die)
 		data->status = DEAD;
 	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
 		return ;
@@ -62,7 +62,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(philo->fork_two);
 	philo_status_check(philo, "has taken a fork");
 	philo_status_check(philo, "is eating");
-	philo->last_time_eaten = get_time();
+	philo->eat_time = get_time();
 	if (data->eat_requirement == true)
 		philo->eat_count++;
 	operation_time(data->time_to_eat);
@@ -91,9 +91,9 @@ void	philo_sleep(t_philo *philo)
 
 void	operation_time(int operation_time)
 {
-	long	start_sleep;
+	unsigned long	start_sleep;
 
 	start_sleep = get_time();
-	while (get_time() - start_sleep < operation_time)
+	while (get_time() - start_sleep < (unsigned)operation_time)
 		usleep(10);
 }

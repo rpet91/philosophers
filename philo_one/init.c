@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 10:52:13 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:29:45 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int				init_philosophers(t_data *data, t_philo **philo)
 	{
 		(*philo)[i].philo_num = i;
 		(*philo)[i].eat_count = 0;
-		(*philo)[i].last_time_eaten = get_time();
+		(*philo)[i].eat_time = get_time();
 		(*philo)[i].data = data;
 		assign_forks(data, &(*philo)[i]);
 		i++;

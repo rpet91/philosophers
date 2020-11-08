@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/10/31 13:33:02 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:19:01 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-long	get_time(void)
+unsigned long	get_time(void)
 {
 	struct timeval		tv;
 
@@ -23,7 +23,7 @@ long	get_time(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void	philo_putnb(long nb)
+void			philo_putnb(unsigned long nb)
 {
 	char	c;
 
@@ -33,7 +33,7 @@ void	philo_putnb(long nb)
 	write(STDOUT_FILENO, &c, 1);
 }
 
-size_t	philo_strlen(char *str)
+size_t			philo_strlen(char *str)
 {
 	size_t	len;
 
@@ -43,7 +43,7 @@ size_t	philo_strlen(char *str)
 	return (len);
 }
 
-int		philo_error(char *error)
+int				philo_error(char *error)
 {
 	size_t	len;
 
@@ -53,10 +53,10 @@ int		philo_error(char *error)
 	return (-1);
 }
 
-int		philo_atoi(char *str)
+unsigned long	philo_atoi(char *str)
 {
-	int			i;
-	long		ret;
+	int				i;
+	unsigned long	ret;
 
 	i = 0;
 	ret = 0;

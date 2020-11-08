@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:08:46 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:34:16 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include <sys/types.h>
 #include <sched.h>
 #include <time.h>
+
+/*
+**	Function which checks if a philosopher dies while waiting or sleeping
+*/
 
 static void		*monitor(void *arg)
 {
@@ -29,7 +33,7 @@ static void		*monitor(void *arg)
 	while ((*philo + i)->eat_count != data->max_eat_amount)
 	{
 		pthread_mutex_lock(&data->death_lock);
-		if (get_time() - (*philo + i)->last_time_eaten >= data->time_to_die)
+		if (get_time() - (*philo + i)->eat_time >= (unsigned)data->time_to_die)
 			data->status = DEAD;
 		if (data->status == DEAD)
 		{

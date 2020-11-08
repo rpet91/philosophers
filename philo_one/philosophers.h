@@ -6,14 +6,13 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/07 13:18:06 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:29:36 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# include <stdio.h> //norm
 # include <stddef.h>
 # include <stdint.h>
 # include <pthread.h>
@@ -30,7 +29,7 @@ typedef struct			s_data {
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_eat_amount;
-	long				start_time;
+	unsigned long		start_time;
 	bool				eat_requirement;
 	t_status			status;
 	pthread_t			monitor;
@@ -42,7 +41,7 @@ typedef struct			s_data {
 typedef struct			s_philo {
 	int					philo_num;
 	int					eat_count;
-	long				last_time_eaten;
+	unsigned long		eat_time;
 	pthread_mutex_t		*fork_one;
 	pthread_mutex_t		*fork_two;
 	pthread_t			philo_thread;
@@ -71,10 +70,10 @@ int						init_data(t_data *data, int argc, char **argv);
 **		Util functions
 */
 
-long					get_time(void);
-void					philo_putnb(long nb);
+unsigned long			get_time(void);
+void					philo_putnb(unsigned long nb);
 size_t					philo_strlen(char *str);
 int						philo_error(char *error);
-int						philo_atoi(char *str);
+unsigned long			philo_atoi(char *str);
 
 #endif
