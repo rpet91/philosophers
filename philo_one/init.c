@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/07 11:45:45 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 10:52:13 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,20 @@
 **	Assigns forks for every philosopher
 */
 
-static void		assign_forks(t_data *data, t_philo **philo, int i)
+static void		assign_forks(t_data *data, t_philo *philo)
 {
+	int		i;
+
+	i = philo->philo_num;
 	if (i % 2 == 0)
 	{
-		(*philo)->fork_one = &data->fork_lock[i];
-		(*philo)->fork_two = &data->fork_lock[(i + 1) % data->philo_amount];
+		philo->fork_one = &data->fork_lock[i];
+		philo->fork_two = &data->fork_lock[(i + 1) % data->philo_amount];
 	}
 	else
 	{
-		(*philo)->fork_one = &data->fork_lock[(i + 1) % data->philo_amount];
-		(*philo)->fork_two = &data->fork_lock[i];
+		philo->fork_one = &data->fork_lock[(i + 1) % data->philo_amount];
+		philo->fork_two = &data->fork_lock[i];
 	}
 }
 
@@ -40,7 +43,7 @@ int				init_philosophers(t_data *data, t_philo **philo)
 {
 	int		i;
 
-	data->fork_lock = malloc(sizeof(pthread_mutex_t) * data->philo_amount);	
+	data->fork_lock = malloc(sizeof(pthread_mutex_t) * data->philo_amount);
 	*philo = malloc(sizeof(t_philo) * data->philo_amount);
 	if (!*philo || !data->fork_lock)
 		return (philo_error("Something went wrong while allocating memory"));
@@ -51,7 +54,7 @@ int				init_philosophers(t_data *data, t_philo **philo)
 		(*philo)[i].eat_count = 0;
 		(*philo)[i].last_time_eaten = get_time();
 		(*philo)[i].data = data;
-		assign_forks(data, philo, i);
+		assign_forks(data, &(*philo)[i]);
 		i++;
 	}
 	return (0);
@@ -72,7 +75,7 @@ int				init_mutexes(t_data *data)
 	i = 0;
 	while (i < data->philo_amount)
 	{
-		if (pthread_mutex_init(data->fork_lock + i, NULL) != 0)
+		if (pthread_mutex_init(&data->fork_lock[i], NULL) != 0)
 			return (philo_error("An error occurred during the fork lock init"));
 		i++;
 	}

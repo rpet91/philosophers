@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/01 14:16:24 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:08:02 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,17 @@ void	philo_eat(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	pthread_mutex_lock(data->fork_lock);
+	pthread_mutex_lock(philo->fork_one);
 	philo_status_check(philo, "has taken a fork");
-	pthread_mutex_lock(data->fork_lock);
+	pthread_mutex_lock(philo->fork_two);
 	philo_status_check(philo, "has taken a fork");
 	philo_status_check(philo, "is eating");
 	philo->last_time_eaten = get_time();
 	if (data->eat_requirement == true)
 		philo->eat_count++;
 	operation_time(data->time_to_eat);
-	pthread_mutex_unlock(data->fork_lock);
-	pthread_mutex_unlock(data->fork_lock);
+	pthread_mutex_unlock(philo->fork_two);
+	pthread_mutex_unlock(philo->fork_one);
 }
 
 /*
@@ -77,7 +77,7 @@ void	philo_eat(t_philo *philo)
 void	philo_sleep(t_philo *philo)
 {
 	t_data	*data;
-	
+
 	data = philo->data;
 	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
 		return ;

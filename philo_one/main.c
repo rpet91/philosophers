@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/07 13:10:04 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:08:46 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,29 @@
 
 static void		*monitor(void *arg)
 {
-	t_philo		*philo;
+	t_philo		**philo;
 	t_data		*data;
+	int			i;
 
-	philo = (t_philo *)arg;
-	data = philo->data;
-	while (philo->eat_count != data->max_eat_amount)
+	philo = (t_philo **)arg;
+	data = (*philo)->data;
+	i = 0;
+	while ((*philo + i)->eat_count != data->max_eat_amount)
 	{
 		pthread_mutex_lock(&data->death_lock);
-		if (get_time() - philo->last_time_eaten > data->time_to_die)
+		if (get_time() - (*philo + i)->last_time_eaten >= data->time_to_die)
 			data->status = DEAD;
 		if (data->status == DEAD)
 		{
-			pthread_mutex_lock(&data->death_lock);	
+			write_status((*philo + i), "died");
+			pthread_mutex_unlock(&data->death_lock);
 			break ;
 		}
-		pthread_mutex_unlock(&data->death_lock);	
+		i++;
+		if (i == data->philo_amount)
+			i = 0;
+		pthread_mutex_unlock(&data->death_lock);
 	}
-	if (data->status == DEAD)
-		write_status(philo, "died");
 	return (NULL);
 }
 
@@ -58,8 +62,6 @@ static void		*philo_loop(void *arg)
 		philo_eat(philo);
 		philo_sleep(philo);
 	}
-	if (philo->eat_count == data->max_eat_amount)
-		write_status(philo, "has finished eating");
 	return (NULL);
 }
 
@@ -80,7 +82,7 @@ static int		create_threads(t_philo **philo)
 			return (philo_error("An error occurred during creating threads"));
 		i++;
 	}
-	if (pthread_create(&(*philo)->data->monitor, NULL, monitor, *philo) != 0)
+	if (pthread_create(&(*philo)->data->monitor, NULL, monitor, philo) != 0)
 		return (philo_error("An error occurred during creating monitor"));
 	i = 0;
 	while (i < (*philo)->data->philo_amount)
@@ -102,13 +104,11 @@ int				main(int argc, char **argv)
 	t_data		data;
 	t_philo		*philo;
 
-
 	if (init_data(&data, argc, argv) == -1)
 		return (1);
-	//printf("kaas\n");
-	if (init_mutexes(&data) == -1)
-		return (1);
 	if (init_philosophers(&data, &philo) == -1)
+		return (1);
+	if (init_mutexes(&data) == -1)
 		return (1);
 	if (create_threads(&philo) == -1)
 		return (1);
