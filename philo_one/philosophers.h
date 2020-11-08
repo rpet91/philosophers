@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:29:36 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:52:54 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PHILOSOPHERS_H
 
 # include <stddef.h>
-# include <stdint.h>
 # include <pthread.h>
 # include <stdbool.h>
 
@@ -47,6 +46,12 @@ typedef struct			s_philo {
 	pthread_t			philo_thread;
 	t_data				*data;
 }						t_philo;
+
+/*
+**		Function where the threads are created
+*/
+
+int						create_threads(t_philo **philo);
 
 /*
 **		Functions where we go through the actions for every philosopher

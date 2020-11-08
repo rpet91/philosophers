@@ -6,11 +6,12 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:30:23 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:49:59 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <pthread.h>
 #include <unistd.h>
 
 /*

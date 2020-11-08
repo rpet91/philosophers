@@ -6,13 +6,13 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:19:01 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/08 11:55:42 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
-#include <stdlib.h>
+#include <stddef.h>
 #include <sys/time.h>
 
 unsigned long	get_time(void)
