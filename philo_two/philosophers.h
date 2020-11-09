@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 15:14:50 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 08:02:38 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <pthread.h>
 # include <semaphore.h>
 # include <stdbool.h>
-# include <stdio.h> //
 
 typedef enum			e_status {
 	ALIVE,

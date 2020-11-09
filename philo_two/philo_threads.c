@@ -6,11 +6,12 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/08 11:42:45 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 16:02:31 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 07:34:37 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -57,7 +58,7 @@ static void		*philo_loop(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	//sleep hier
+	usleep(100 * (philo->philo_num % 2));
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
 		philo_status_check(philo, "is thinking");

@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 15:15:24 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 08:02:29 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 **	Creates a struct for every philosopher
 */
 
-int				init_philosophers(t_data *data, t_philo **philo)
+int			init_philosophers(t_data *data, t_philo **philo)
 {
 	int		i;
 
@@ -41,7 +41,7 @@ int				init_philosophers(t_data *data, t_philo **philo)
 **	Initialises the mutex locks for writing status and forks
 */
 
-int				init_mutexes(t_data *data)
+int			init_mutexes(t_data *data)
 {
 	sem_unlink("death_lock");
 	data->death_lock = sem_open("death_lock", O_CREAT, 0644, 1);
@@ -62,7 +62,7 @@ int				init_mutexes(t_data *data)
 **	Checks if the given input is valid
 */
 
-static int		validate_input(t_data *data)
+static int	validate_input(t_data *data)
 {
 	if (data->philo_amount <= 0)
 		return (philo_error("Invalid input for amount of philosophers"));
@@ -81,7 +81,7 @@ static int		validate_input(t_data *data)
 **	Saves all the input in a data struct
 */
 
-int				init_data(t_data *data, int argc, char **argv)
+int			init_data(t_data *data, int argc, char **argv)
 {
 	if (argc != 5 && argc != 6)
 		return (philo_error("Invalid amount of arguments"));
