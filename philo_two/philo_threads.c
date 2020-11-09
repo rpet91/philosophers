@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/08 11:42:45 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 07:34:37 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 18:30:17 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,16 @@ static void		*monitor(void *arg)
 	{
 		sem_wait(data->death_lock);
 		if (get_time() - (*philo + i)->eat_time >= (unsigned)data->time_to_die)
-			data->status = DEAD;
-		if (data->status == DEAD)
 		{
 			write_status((*philo + i), "died");
+			data->status = DEAD;
 			sem_post(data->death_lock);
 			break ;
 		}
+		sem_post(data->death_lock);
 		i++;
 		if (i == data->philo_amount)
 			i = 0;
-		sem_post(data->death_lock);
 	}
 	return (NULL);
 }
@@ -61,7 +60,7 @@ static void		*philo_loop(void *arg)
 	usleep(100 * (philo->philo_num % 2));
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
-		philo_status_check(philo, "is thinking");
+		write_status(philo, "is thinking");
 		philo_eat(philo);
 		philo_sleep(philo);
 	}

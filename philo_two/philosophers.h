@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 08:02:38 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 18:31:41 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int						create_threads(t_philo **philo);
 */
 
 void					write_status(t_philo *philo, char *status);
-void					philo_status_check(t_philo *philo, char *status);
 void					philo_eat(t_philo *philo);
 void					philo_sleep(t_philo *philo);
 void					operation_time(int operation_time);

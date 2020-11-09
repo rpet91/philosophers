@@ -6,12 +6,13 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/08 11:42:45 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:47:03 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 18:22:10 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <pthread.h>
+#include <unistd.h>
 
 /*
 **	Function which checks if a philosopher dies while waiting or sleeping
@@ -30,17 +31,16 @@ static void		*monitor(void *arg)
 	{
 		pthread_mutex_lock(&data->death_lock);
 		if (get_time() - (*philo + i)->eat_time >= (unsigned)data->time_to_die)
-			data->status = DEAD;
-		if (data->status == DEAD)
 		{
 			write_status((*philo + i), "died");
+			data->status = DEAD;
 			pthread_mutex_unlock(&data->death_lock);
 			break ;
 		}
+		pthread_mutex_unlock(&data->death_lock);
 		i++;
 		if (i == data->philo_amount)
 			i = 0;
-		pthread_mutex_unlock(&data->death_lock);
 	}
 	return (NULL);
 }
@@ -56,9 +56,10 @@ static void		*philo_loop(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
+	usleep(10 * (philo->philo_num % 2));
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
-		philo_status_check(philo, "is thinking");
+		write_status(philo, "is thinking");
 		philo_eat(philo);
 		philo_sleep(philo);
 	}

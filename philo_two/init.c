@@ -6,13 +6,14 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 08:02:29 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 18:26:17 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdlib.h>
 #include <semaphore.h>
+#include <stdbool.h>
 
 /*
 **	Creates a struct for every philosopher
@@ -28,7 +29,7 @@ int			init_philosophers(t_data *data, t_philo **philo)
 	i = 0;
 	while (i < data->philo_amount)
 	{
-		(*philo)[i].philo_num = i;
+		(*philo)[i].philo_num = i + 1;
 		(*philo)[i].eat_count = 0;
 		(*philo)[i].eat_time = get_time();
 		(*philo)[i].data = data;
@@ -64,7 +65,7 @@ int			init_mutexes(t_data *data)
 
 static int	validate_input(t_data *data)
 {
-	if (data->philo_amount <= 0)
+	if (data->philo_amount <= 1)
 		return (philo_error("Invalid input for amount of philosophers"));
 	if (data->time_to_die <= 0)
 		return (philo_error("Invalid input for time to die"));

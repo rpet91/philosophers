@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:49:13 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 09:06:42 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	Main function for the philosophers
 */
 
-int				main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	t_data		data;
 	t_philo		*philo;

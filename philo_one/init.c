@@ -6,34 +6,14 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:29:45 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/09 18:22:07 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdlib.h>
 #include <pthread.h>
-
-/*
-**	Assigns forks for every philosopher
-*/
-
-static void		assign_forks(t_data *data, t_philo *philo)
-{
-	int		i;
-
-	i = philo->philo_num;
-	if (i % 2 == 0)
-	{
-		philo->fork_one = &data->fork_lock[i];
-		philo->fork_two = &data->fork_lock[(i + 1) % data->philo_amount];
-	}
-	else
-	{
-		philo->fork_one = &data->fork_lock[(i + 1) % data->philo_amount];
-		philo->fork_two = &data->fork_lock[i];
-	}
-}
+#include <stdbool.h>
 
 /*
 **	Creates a struct for every philosopher
@@ -50,11 +30,12 @@ int				init_philosophers(t_data *data, t_philo **philo)
 	i = 0;
 	while (i < data->philo_amount)
 	{
-		(*philo)[i].philo_num = i;
+		(*philo)[i].philo_num = i + 1;
 		(*philo)[i].eat_count = 0;
 		(*philo)[i].eat_time = get_time();
 		(*philo)[i].data = data;
-		assign_forks(data, &(*philo)[i]);
+		(*philo)[i].fork_one = &data->fork_lock[i];
+		(*philo)[i].fork_two = &data->fork_lock[(i + 1) % data->philo_amount];
 		i++;
 	}
 	return (0);
@@ -88,7 +69,7 @@ int				init_mutexes(t_data *data)
 
 static int		validate_input(t_data *data)
 {
-	if (data->philo_amount <= 0)
+	if (data->philo_amount <= 1)
 		return (philo_error("Invalid input for amount of philosophers"));
 	if (data->time_to_die <= 0)
 		return (philo_error("Invalid input for time to die"));
