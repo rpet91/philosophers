@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   time.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/11/01 09:14:54 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/15 09:33:15 by rpet          ########   odam.nl         */
+/*   Created: 2020/11/15 13:34:35 by rpet          #+#    #+#                 */
+/*   Updated: 2020/11/15 13:34:41 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include <sys/time.h>
 
-/*
-**	Main function for the philosophers
-*/
-
-int		main(int argc, char **argv)
+unsigned long	get_time(void)
 {
-	t_data		data;
+	struct timeval		tv;
 
-	init_data(&data, argc, argv);
-	init_mutexes(&data);
-	create_processes(&data);
-	return (0);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }

@@ -6,22 +6,23 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 09:54:36 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 13:44:45 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
 #include <stddef.h>
-#include <sys/time.h>
 #include <stdlib.h>
 
-unsigned long	get_time(void)
+int				philo_strcmp(const char *s1, const char *s2)
 {
-	struct timeval		tv;
+	int	i;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0')
+		i++;
+	return ((int)(s1[i] - s2[i]));
 }
 
 void			philo_putnb(unsigned long nb)
@@ -34,7 +35,7 @@ void			philo_putnb(unsigned long nb)
 	write(STDOUT_FILENO, &c, 1);
 }
 
-size_t			philo_strlen(char *str)
+size_t			philo_strlen(const char *str)
 {
 	size_t	len;
 
@@ -44,7 +45,7 @@ size_t			philo_strlen(char *str)
 	return (len);
 }
 
-void			philo_error(char *error)
+void			philo_error(const char *error)
 {
 	size_t	len;
 
@@ -54,7 +55,7 @@ void			philo_error(char *error)
 	exit(1);
 }
 
-unsigned long	philo_atoi(char *str)
+unsigned long	philo_atoi(const char *str)
 {
 	int				i;
 	unsigned long	ret;

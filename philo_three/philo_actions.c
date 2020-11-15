@@ -6,13 +6,14 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 15:10:31 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 14:30:03 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
 #include <semaphore.h>
+#include <stdbool.h>
 
 /*
 **	Function which writes the status of the philosopher
@@ -30,23 +31,9 @@ void	write_status(t_philo *philo, char *status)
 	write(STDOUT_FILENO, " ", 1);
 	write(STDOUT_FILENO, status, philo_strlen(status));
 	write(STDOUT_FILENO, "\n", 1);
-	sem_post(data->write_lock);
-}
-
-/*
-**	Function which checks if the philosopher is alive or done eating
-*/
-
-void	philo_status_check(t_philo *philo, char *status)
-{
-	t_data	*data;
-
-	data = philo->data;
-	if (get_time() - philo->eat_time > (unsigned)data->time_to_die)
-		data->status = DEAD;
-	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
+	if (!philo_strcmp(status, "died"))
 		return ;
-	write_status(philo, status);
+	sem_post(data->write_lock);
 }
 
 /*
@@ -59,11 +46,13 @@ void	philo_eat(t_philo *philo)
 
 	data = philo->data;
 	sem_wait(data->fork_lock);
-	philo_status_check(philo, "has taken a fork");
+	write_status(philo, "has taken a fork");
 	sem_wait(data->fork_lock);
-	philo_status_check(philo, "has taken a fork");
-	philo_status_check(philo, "is eating");
+	write_status(philo, "has taken a fork");
+	sem_wait(data->death_lock);
+	write_status(philo, "is eating");
 	philo->eat_time = get_time();
+	sem_post(data->death_lock);
 	if (data->eat_requirement == true)
 		philo->eat_count++;
 	operation_time(data->time_to_eat);
@@ -80,9 +69,7 @@ void	philo_sleep(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	if (data->status == DEAD || philo->eat_count == data->max_eat_amount)
-		return ;
-	philo_status_check(philo, "is sleeping");
+	write_status(philo, "is sleeping");
 	operation_time(data->time_to_sleep);
 }
 

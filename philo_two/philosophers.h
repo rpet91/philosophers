@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:09:42 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 18:31:41 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 13:42:09 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,18 @@ int						init_mutexes(t_data *data);
 int						init_data(t_data *data, int argc, char **argv);
 
 /*
-**		Util functions
+**		Time function
 */
 
 unsigned long			get_time(void);
+
+/*
+**		Util functions
+*/
+
 void					philo_putnb(unsigned long nb);
-size_t					philo_strlen(char *str);
-int						philo_error(char *error);
-unsigned long			philo_atoi(char *str);
+size_t					philo_strlen(const char *str);
+int						philo_error(const char *error);
+unsigned long			philo_atoi(const char *str);
 
 #endif

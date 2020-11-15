@@ -6,22 +6,13 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/08 11:55:42 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 13:41:59 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <unistd.h>
 #include <stddef.h>
-#include <sys/time.h>
-
-unsigned long	get_time(void)
-{
-	struct timeval		tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
 
 void			philo_putnb(unsigned long nb)
 {
@@ -33,7 +24,7 @@ void			philo_putnb(unsigned long nb)
 	write(STDOUT_FILENO, &c, 1);
 }
 
-size_t			philo_strlen(char *str)
+size_t			philo_strlen(const char *str)
 {
 	size_t	len;
 
@@ -43,7 +34,7 @@ size_t			philo_strlen(char *str)
 	return (len);
 }
 
-int				philo_error(char *error)
+int				philo_error(const char *error)
 {
 	size_t	len;
 
@@ -53,7 +44,7 @@ int				philo_error(char *error)
 	return (-1);
 }
 
-unsigned long	philo_atoi(char *str)
+unsigned long	philo_atoi(const char *str)
 {
 	int				i;
 	unsigned long	ret;

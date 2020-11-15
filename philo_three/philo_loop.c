@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   philo_forks.c                                      :+:    :+:            */
+/*   philo_loop.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/08 11:42:45 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 16:47:17 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 14:21:12 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-#include <unistd.h>
-#include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdbool.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 /*
 **	Function which checks if a philosopher dies while waiting or sleeping
@@ -33,13 +30,12 @@ static void		*monitor(void *arg)
 	while (philo->eat_count != data->max_eat_amount)
 	{
 		sem_wait(data->death_lock);
-		if (get_time() - philo->eat_time > (unsigned)data->time_to_die)
-			data->status = DEAD;
-		if (data->status == DEAD)
+		if (get_time() - philo->eat_time >= (unsigned)data->time_to_die)
 		{
 			write_status(philo, "died");
+			data->status = DEAD;
 			sem_post(data->death_lock);
-			break ;
+			exit(1);
 		}
 		sem_post(data->death_lock);
 	}
@@ -50,7 +46,7 @@ static void		*monitor(void *arg)
 **	Function where every philosopher does their actions
 */
 
-static void		philo_loop(t_philo *philo, int philo_num)
+void			philo_loop(t_philo *philo, int philo_num)
 {
 	t_data		*data;
 
@@ -61,60 +57,9 @@ static void		philo_loop(t_philo *philo, int philo_num)
 	usleep(100 * (philo->philo_num % 2));
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
-		philo_status_check(philo, "is thinking");
+		write_status(philo, "is thinking");
 		philo_eat(philo);
 		philo_sleep(philo);
 	}
-	if (data->status == DEAD)
-		exit(1);
 	exit(0);
-}
-
-/*
-**	Function which checks if a philosopher died and terminates every process
-*/
-
-static void		health_communicator(t_data *data)
-{
-	pid_t		pid;
-	int			status;
-	int			i;
-
-	i = 0;
-	while (i < data->philo_amount)
-	{
-		pid = waitpid(-1, &status, 0);
-		if (WEXITED(status) == true)
-		{
-			if (WEXITSTATUS(status) == 1)
-			{
-				printf("kaaspap\n");
-			}
-		}
-	}
-}
-
-/*
-**	Function which creates threads for the amount of philosophers
-*/
-
-void			create_forks(t_data *data)
-{
-	t_philo		philo;
-	pid_t		pid;
-	int			i;
-	int			status;
-
-	init_philosophers(data, &philo);
-	i = 0;
-	while (i < data->philo_amount)
-	{
-		pid = fork();
-		if (pid == -1)
-			philo_error("An error occurred during calling fork");
-		else if (pid == 0)
-			philo_loop(&philo, i);
-		i++;
-	}
-	health_communicator(data);
 }

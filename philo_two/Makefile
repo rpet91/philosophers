@@ -6,7 +6,7 @@
 #    By: rpet <marvin@codam.nl>                       +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/10/23 12:58:28 by rpet          #+#    #+#                  #
-#    Updated: 2020/11/08 12:51:46 by rpet          ########   odam.nl          #
+#    Updated: 2020/11/15 13:34:47 by rpet          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ ifdef DEBUG
 	FLAGS += -g -fsanitize=address
 endif
 OBJSDIR = objs/
-_OBJS = main.o init.o utils.o philo_actions.o philo_threads.o
+_OBJS = main.o init.o utils.o philo_actions.o philo_threads.o time.o
 OBJS = $(addprefix $(OBJSDIR),$(_OBJS))
 INC = philosophers.h
 
