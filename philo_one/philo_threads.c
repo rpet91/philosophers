@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/08 11:42:45 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 18:22:10 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/15 08:45:57 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void		*philo_loop(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	usleep(10 * (philo->philo_num % 2));
+	usleep(100 * ((philo->philo_num - 1) % 2));
 	while (data->status != DEAD && philo->eat_count != data->max_eat_amount)
 	{
 		write_status(philo, "is thinking");
