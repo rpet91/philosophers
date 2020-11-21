@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 09:37:19 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/15 13:44:45 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/21 09:22:12 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void			philo_error(const char *error)
 
 	len = philo_strlen(error);
 	write(STDERR_FILENO, error, len);
-	write(1, "\n", 1);
+	write(STDERR_FILENO, "\n", 1);
 	exit(1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 10:40:09 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/15 13:41:48 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/21 09:08:40 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,5 @@ void	operation_time(int operation_time)
 
 	start_sleep = get_time();
 	while (get_time() - start_sleep < (unsigned)operation_time)
-		usleep(100);
+		usleep(10);
 }

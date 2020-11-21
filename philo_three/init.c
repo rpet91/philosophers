@@ -6,13 +6,13 @@
 /*   By: rpet <marvin@codam.nl>                       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/26 17:01:16 by rpet          #+#    #+#                 */
-/*   Updated: 2020/11/09 16:46:05 by rpet          ########   odam.nl         */
+/*   Updated: 2020/11/21 09:15:49 by rpet          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-#include <stdlib.h>
 #include <semaphore.h>
+#include <stdbool.h>
 
 /*
 **	Creates a struct for every philosopher
